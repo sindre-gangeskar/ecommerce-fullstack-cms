@@ -5,5 +5,5 @@ export default function errorHandler(err: HttpError, req: Request, res: Response
   if (err.status == 404)
     return res.status(err.status).json({ message: 'resource not found' });
 
-  return res.status(err.status).json({ message: err.message });
+  return res.status(err.status || 500).json({ message: err.message || "An internal server error has occurred" });
 }

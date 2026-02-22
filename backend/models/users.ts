@@ -1,9 +1,11 @@
 import { Sequelize, DataTypes, Optional, Model } from 'sequelize';
+import { RoleAttributes } from './roles';
 
 export interface UserAttributes {
   id?: number;
   email: string;
   roleId: number;
+  role?: RoleAttributes;
 }
 
 export interface UserCreationAttributes extends Optional<UserAttributes, "id"> { }
@@ -11,6 +13,7 @@ export class User extends Model<UserAttributes, UserCreationAttributes> {
   declare public id: number;
   declare public email: string;
   declare public roleId: number;
+  declare public role?: RoleAttributes
 }
 
 export function initUser(sequelize: Sequelize) {

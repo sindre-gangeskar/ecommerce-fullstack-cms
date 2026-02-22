@@ -14,7 +14,10 @@
     "strict": true,
     "noImplicitAny": false,
     "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@/*": ["."]
+    }
   },
   "include": [
     "."

@@ -9,7 +9,7 @@ import cookieParser from 'cookie-parser'
 import logger from 'morgan'
 import { fileURLToPath } from 'url'
 import sequelize from 'models';
-import errorHandler from 'helpers/errorHandler';
+import errorHandler from 'middleware/errorHandler';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -31,7 +31,7 @@ app.use('/users', usersRouter);
 app.use('/brands', brandsRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req: Request, res: Response, next: NextFunction ) {
+app.use(function(_req: Request, _res: Response, next: NextFunction ) {
   next(createError(404));
 });
 
