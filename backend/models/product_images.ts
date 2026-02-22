@@ -21,5 +21,5 @@ export function initProductImages(sequelize: Sequelize) {
     img_url: { type: DataTypes.TEXT, allowNull: false },
     productId: { type: DataTypes.INTEGER, references: { model: 'products', key: 'id' } },
     imageTypeId: { type: DataTypes.INTEGER, references: { model: 'image_types', key: 'id' } }
-  }, { sequelize: sequelize, timestamps: true, modelName: 'product_images' })
+  }, { sequelize, timestamps: true, modelName: 'product_images' })
 }

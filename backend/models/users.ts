@@ -18,5 +18,5 @@ export function initUser(sequelize: Sequelize) {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     email: { type: DataTypes.STRING, allowNull: false, unique: true },
     roleId: { type: DataTypes.INTEGER, allowNull: false, references: { model: 'roles', key: 'id' } }
-  }, { sequelize: sequelize, timestamps: true, modelName: 'users' })
+  }, { sequelize, timestamps: true, modelName: 'users' })
 }

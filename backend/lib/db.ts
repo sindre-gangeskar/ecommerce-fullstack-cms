@@ -1,22 +1,22 @@
+import { Sequelize } from "sequelize";
+
 import { initBrand, Brand, BrandAttributes } from "models/brands";
 import { initCategory, Category, CategoryAttributes } from "models/categories";
 import { initProduct, Product, ProductAttributes } from "models/products";
-import sequelize from "models";
-import { Sequelize } from "sequelize";
-import { initImgType } from "models/image_types";
-import { initProductImages } from "models/product_images";
-import { ImageType } from "models/image_types";
-import { ProductImage } from "models/product_images";
-import { Role, initRole } from "models/roles";
-import { User, initUser } from 'models/users';
+import { initImageType, ImageType } from "models/image_types";
+import { initProductImages, ProductImage } from "models/product_images";
+import { initRole, Role, RoleAttributes } from "models/roles";
+import { initUser, User, UserAttributes } from 'models/users';
+
 export function initialize(sequelize: Sequelize): void {
   initBrand(sequelize);
   initCategory(sequelize);
-  initProduct(sequelize);
-  initImgType(sequelize);
+  initImageType(sequelize);
   initProductImages(sequelize);
+  initProduct(sequelize);
   initRole(sequelize);
   initUser(sequelize);
+
   /* Many-to-one relationship between products and brands */
   Brand.hasMany(Product, { foreignKey: 'brandId', onDelete: 'RESTRICT' });
   Product.belongsTo(Brand, { foreignKey: 'brandId' });
@@ -37,21 +37,28 @@ export function initialize(sequelize: Sequelize): void {
   User.belongsTo(Role, { foreignKey: 'roleId' });
 }
 
-export async function seed(): Promise<void> {
+export async function seed(sequelize: Sequelize): Promise<void> {
   try {
     initialize(sequelize);
+
     const hasBrands = await Brand.count() > 0;
     const hasCategories = await Category.count() > 0;
     const hasProducts = await Product.count() > 0;
+    const hasRoles = await Role.count() > 0;
+    const hasUsers = await User.count() > 0;
 
     const brands: BrandAttributes[] = [ { name: "adidas" }, { name: "umbro" }, { name: "nike" }, { name: "nvidia" }, { name: "amd" }, { name: "samsung" }, { name: "microsoft" }, { name: "primtex" } ];
     const mainCategories: CategoryAttributes[] = [ { name: "clothing" }, { name: "entertainment" }, { name: "office" }, { name: "furnitures" }, { name: "electronics" } ]
+    const roles: RoleAttributes[] = [ { name: "user" }, { name: 'admin' } ];
 
     if (!hasBrands)
       await Brand.bulkCreate(brands);
 
     if (!hasCategories)
       await Category.bulkCreate(mainCategories);
+
+    if (!hasRoles)
+      await Role.bulkCreate(roles);
 
     const brandEntries = await Brand.findAll();
     const categoryEntries = await Category.findAll();
@@ -93,6 +100,13 @@ export async function seed(): Promise<void> {
 
     if (!hasProducts)
       await Product.bulkCreate(products);
+
+    const adminRole = await Role.findOne({ where: { name: 'admin' } });
+
+    if (!hasUsers && adminRole) {
+      const user: UserAttributes = { email: process.env.DEFAULT_ADMIN_EMAIL!, roleId: adminRole.id };
+      await User.create(user);
+    }
     console.info('Database has been seeded')
   } catch (error) {
     console.error(error);

@@ -24,5 +24,5 @@ export function initProduct(sequelize: Sequelize) {
     categoryId: { type: DataTypes.INTEGER, references: { model: 'categories', key: 'id' } },
     brandId: { type: DataTypes.INTEGER, references: { model: 'brands', key: 'id' } },
     description: { type: DataTypes.TEXT, allowNull: true },
-  }, { sequelize: sequelize, timestamps: true, tableName: 'products' })
+  }, { sequelize, timestamps: true, tableName: 'products' })
 }

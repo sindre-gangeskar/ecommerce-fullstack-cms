@@ -6,7 +6,7 @@ export interface RoleAttributes {
 }
 
 export interface RoleCreationAttributes extends Optional<RoleAttributes, "id"> { };
-export class Role extends Model {
+export class Role extends Model<RoleAttributes, RoleCreationAttributes> {
   declare public id: number;
   declare public name: string;
 }
@@ -15,5 +15,5 @@ export function initRole(sequelize: Sequelize) {
   Role.init({
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     name: { type: DataTypes.STRING, allowNull: false, unique: true },
-  }, { sequelize: sequelize, timestamps: false, modelName: 'roles' })
+  }, { sequelize, timestamps: false, modelName: 'roles' })
 }

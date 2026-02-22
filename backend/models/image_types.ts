@@ -11,9 +11,9 @@ export class ImageType extends Model {
   declare public name: string;
 }
 
-export function initImgType(sequelize: Sequelize) {
+export function initImageType(sequelize: Sequelize) {
   ImageType.init({
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     name: { type: DataTypes.STRING, allowNull: false, unique: true }
-  }, { sequelize: sequelize, modelName: 'image_types' })
+  }, { sequelize, modelName: 'image_types' })
 }
