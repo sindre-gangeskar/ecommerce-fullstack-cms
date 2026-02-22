@@ -7,6 +7,7 @@ import { initImageType, ImageType } from "models/image_types";
 import { initProductImages, ProductImage } from "models/product_images";
 import { initRole, Role, RoleAttributes } from "models/roles";
 import { initUser, User, UserAttributes } from 'models/users';
+import { initUserLoginToken, UserLoginToken } from "models/user_tokens";
 
 export function initialize(sequelize: Sequelize): void {
   initBrand(sequelize);
@@ -16,7 +17,7 @@ export function initialize(sequelize: Sequelize): void {
   initProduct(sequelize);
   initRole(sequelize);
   initUser(sequelize);
-
+  initUserLoginToken(sequelize);
   /* Many-to-one relationship between products and brands */
   Brand.hasMany(Product, { foreignKey: 'brandId', onDelete: 'RESTRICT' });
   Product.belongsTo(Brand, { foreignKey: 'brandId' });
@@ -35,6 +36,9 @@ export function initialize(sequelize: Sequelize): void {
 
   Role.hasMany(User, { foreignKey: 'roleId', onDelete: 'RESTRICT' });
   User.belongsTo(Role, { foreignKey: 'roleId' });
+
+  User.hasOne(UserLoginToken, { foreignKey: 'userId', onDelete: 'CASCADE' });
+  UserLoginToken.belongsTo(User, { foreignKey: 'userId', foreignKeyConstraint: true });
 }
 
 export async function seed(sequelize: Sequelize): Promise<void> {
