@@ -9,6 +9,7 @@ import cookieParser from 'cookie-parser'
 import logger from 'morgan'
 import { fileURLToPath } from 'url'
 import sequelize from 'models';
+import errorHandler from 'helpers/errorHandler';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -34,14 +35,5 @@ app.use(function(req: Request, res: Response, next: NextFunction ) {
   next(createError(404));
 });
 
-// error handler
-app.use(function(err: HttpError, req: Request, res: Response, next: NextFunction ) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  res.status(err.status || 500);
-  err.status === 404 ? res.status(err.status).json({ message: 'resource not found' }) : res.status(err.status).json({message: 'An unexpected error has occurred'});
-});
-
+app.use(errorHandler);
 export default app;
