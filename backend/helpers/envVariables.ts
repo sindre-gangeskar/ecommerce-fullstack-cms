@@ -23,6 +23,15 @@ if (!process.env.DB_PASSWORD)
 if (!process.env.DB_DIALECT)
   accumulatedMissingEnvVariables.push('DB_DIALECT');
 
+if (!process.env.DEFAULT_ADMIN_EMAIL)
+  accumulatedMissingEnvVariables.push('DEFAULT_ADMIN_EMAIL');
+
+if (!process.env.RESEND_API_KEY)
+  accumulatedMissingEnvVariables.push('RESEND_API_KEY');
+
+if (!process.env.RESEND_EMAIL)
+  accumulatedMissingEnvVariables.push('RESEND_EMAIL');
+
 if (accumulatedMissingEnvVariables.length > 0) {
   throw new Error(`Missing environment variables: ${accumulatedMissingEnvVariables}`)
 }
@@ -34,5 +43,7 @@ const dbPort = process.env.DB_PORT!;
 const dbUsername = process.env.DB_USERNAME!;
 const dbPassword = process.env.DB_PASSWORD!;
 const dbDialect = process.env.DB_DIALECT! as Dialect;
-
-export { jwtSecret, dbName, dbPort, dbHost, dbUsername, dbPassword, dbDialect };
+const defaultAdminEmail = process.env.DEFAULT_ADMIN_EMAIL!;
+const resendAPIKey = process.env.RESEND_API_KEY!;
+const resendEmail = process.env.RESEND_EMAIL!;
+export { jwtSecret, dbName, dbPort, dbHost, dbUsername, dbPassword, dbDialect, defaultAdminEmail, resendAPIKey, resendEmail };

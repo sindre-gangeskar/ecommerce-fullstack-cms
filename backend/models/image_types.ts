@@ -5,8 +5,8 @@ export interface ImageTypeAttributes {
   name: string;
 }
 
-export interface ImgTypeCreationAttributes extends Optional<ImageTypeAttributes, "id"> { }
-export class ImageType extends Model {
+export interface ImageTypeCreationAttributes extends Optional<ImageTypeAttributes, "id"> { }
+export class ImageType extends Model<ImageTypeAttributes, ImageTypeCreationAttributes> {
   declare public id: string;
   declare public name: string;
 }

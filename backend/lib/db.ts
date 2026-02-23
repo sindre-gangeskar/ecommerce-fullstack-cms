@@ -3,11 +3,12 @@ import { Sequelize } from "sequelize";
 import { initBrand, Brand, BrandAttributes } from "models/brands";
 import { initCategory, Category, CategoryAttributes } from "models/categories";
 import { initProduct, Product, ProductAttributes } from "models/products";
-import { initImageType, ImageType } from "models/image_types";
+import { initImageType, ImageType, ImageTypeAttributes } from "models/image_types";
 import { initProductImages, ProductImage } from "models/product_images";
 import { initRole, Role, RoleAttributes } from "models/roles";
 import { initUser, User, UserAttributes } from 'models/users';
-import { initUserLoginToken, UserLoginToken } from "models/user_tokens";
+import { initUserLoginToken, UserLoginToken } from "models/user_login_tokens";
+import { defaultAdminEmail } from "helpers/envVariables";
 
 export function initialize(sequelize: Sequelize): void {
   initBrand(sequelize);
@@ -18,6 +19,7 @@ export function initialize(sequelize: Sequelize): void {
   initRole(sequelize);
   initUser(sequelize);
   initUserLoginToken(sequelize);
+
   /* Many-to-one relationship between products and brands */
   Brand.hasMany(Product, { foreignKey: 'brandId', onDelete: 'RESTRICT' });
   Product.belongsTo(Brand, { foreignKey: 'brandId' });
@@ -34,11 +36,13 @@ export function initialize(sequelize: Sequelize): void {
   Product.hasMany(ProductImage, { foreignKey: 'productId', onDelete: 'CASCADE' });
   ProductImage.belongsTo(Product, { foreignKey: 'productId' });
 
+  /* Many-to-one relationship between users and roles */
   Role.hasMany(User, { foreignKey: 'roleId', onDelete: 'RESTRICT' });
   User.belongsTo(Role, { foreignKey: 'roleId' });
 
+  /* One-to-one relationship between users and user login tokens */
   User.hasOne(UserLoginToken, { foreignKey: 'userId', onDelete: 'CASCADE' });
-  UserLoginToken.belongsTo(User, { foreignKey: 'userId', foreignKeyConstraint: true });
+  UserLoginToken.belongsTo(User, { foreignKey: 'userId' });
 }
 
 export async function seed(sequelize: Sequelize): Promise<void> {
@@ -50,10 +54,12 @@ export async function seed(sequelize: Sequelize): Promise<void> {
     const hasProducts = await Product.count() > 0;
     const hasRoles = await Role.count() > 0;
     const hasUsers = await User.count() > 0;
+    const hasImageTypes = await ImageType.count() > 0;
 
     const brands: BrandAttributes[] = [ { name: "adidas" }, { name: "umbro" }, { name: "nike" }, { name: "nvidia" }, { name: "amd" }, { name: "samsung" }, { name: "microsoft" }, { name: "primtex" } ];
     const mainCategories: CategoryAttributes[] = [ { name: "clothing" }, { name: "entertainment" }, { name: "office" }, { name: "furnitures" }, { name: "electronics" } ]
     const roles: RoleAttributes[] = [ { name: "user" }, { name: 'admin' } ];
+    const imageTypes: ImageTypeAttributes[] = [ { name: "hero" }, { name: "thumbnail" }, { name: "presentation" } ]
 
     if (!hasBrands)
       await Brand.bulkCreate(brands);
@@ -63,6 +69,9 @@ export async function seed(sequelize: Sequelize): Promise<void> {
 
     if (!hasRoles)
       await Role.bulkCreate(roles);
+
+    if (!hasImageTypes)
+      await ImageType.bulkCreate(imageTypes);
 
     const brandEntries = await Brand.findAll();
     const categoryEntries = await Category.findAll();
@@ -108,7 +117,7 @@ export async function seed(sequelize: Sequelize): Promise<void> {
     const adminRole = await Role.findOne({ where: { name: 'admin' } });
 
     if (!hasUsers && adminRole) {
-      const user: UserAttributes = { email: process.env.DEFAULT_ADMIN_EMAIL!, roleId: adminRole.id };
+      const user: UserAttributes = { email: defaultAdminEmail, roleId: adminRole.id };
       await User.create(user);
     }
     console.info('Database has been seeded')

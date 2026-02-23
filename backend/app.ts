@@ -1,7 +1,6 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 import { Request, Response, NextFunction } from 'express'
-import { HttpError } from 'http-errors'
 import createError from 'http-errors'
 import express from 'express'
 import path from 'path'
@@ -16,6 +15,8 @@ const __dirname = path.dirname(__filename);
 import indexRouter from './routes/index'
 import usersRouter from './routes/users'
 import brandsRouter from './routes/brands';
+import authRouter from './routes/auth';
+
 var app = express();
 
 sequelize.sync({ force: true });
@@ -29,6 +30,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/brands', brandsRouter);
+app.use('/auth', authRouter);
 
 // catch 404 and forward to error handler
 app.use(function(_req: Request, _res: Response, next: NextFunction ) {

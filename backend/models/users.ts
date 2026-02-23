@@ -19,7 +19,7 @@ export class User extends Model<UserAttributes, UserCreationAttributes> {
 export function initUser(sequelize: Sequelize) {
   User.init({
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    email: { type: DataTypes.STRING, allowNull: false, unique: true },
+    email: { type: DataTypes.STRING, allowNull: false, unique: true, validate: { isEmail: { msg: 'Incorrect email format, please double-check and try again' } } },
     roleId: { type: DataTypes.INTEGER, allowNull: false, references: { model: 'roles', key: 'id' } }
   }, { sequelize, timestamps: true, modelName: 'users' })
 }
