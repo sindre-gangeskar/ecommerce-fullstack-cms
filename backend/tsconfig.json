@@ -1,29 +1,22 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "incremental": true,
-    "target": "es5",
-    "lib": [
-      "ES6"
-    ],
+    "lib": ["ESNext"],
+    "module": "preserve",
+    "target": "esnext",
+    "moduleResolution": "bundler",
     "allowJs": true,
-    "rootDir": ".",
-    "outDir": "dist",
     "strict": true,
     "noImplicitAny": false,
-    "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
     "paths": {
-      "@/*": ["."]
-    }
+      "@/*": ["./*"],
+      "*": ["./*"]
+    },
+
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noPropertyAccessFromIndexSignature": false
   },
-  "include": [
-    "."
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
 }

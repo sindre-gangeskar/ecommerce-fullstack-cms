@@ -5,7 +5,7 @@ export interface UserLoginTokenAttributes {
   token: string;
   path: string;
   userId: number;
-  expiresAt: DataTypes.DateDataType
+  expiresAt: Date
 }
 
 export interface UserLoginTokenCreationAttributes extends Optional<UserLoginTokenAttributes, "id"> { };
@@ -14,7 +14,7 @@ export class UserLoginToken extends Model<UserLoginTokenAttributes, UserLoginTok
   declare public token: string;
   declare public path: string;
   declare public userId: number;
-  declare public expiresAt: DataTypes.DateDataType
+  declare public expiresAt: Date
 }
 
 export function initUserLoginToken(sequelize: Sequelize) {
@@ -23,6 +23,6 @@ export function initUserLoginToken(sequelize: Sequelize) {
     token: { type: DataTypes.TEXT, allowNull: false },
     path: { type: DataTypes.TEXT, allowNull: false },
     userId: { type: DataTypes.INTEGER, allowNull: false, references: { model: 'users', key: 'id' }, unique: true },
-    expiresAt: { type: DataTypes.DATE, allowNull: false, defaultValue: () => new Date(Date.now() + 1000 * 60 * 10) }
+    expiresAt: { type: DataTypes.DATE, allowNull: false, defaultValue: () => new Date(Date.now() + 1000 * 60 * 5) }
   }, { sequelize, timestamps: true, modelName: 'user_login_tokens' })
 }

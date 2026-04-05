@@ -1,6 +1,17 @@
 import { Dialect } from "sequelize";
 
 const accumulatedMissingEnvVariables: string[] = [];
+if (!process.env.NODE_ENV)
+  accumulatedMissingEnvVariables.push('NODE_ENV');
+
+if (!process.env.BASE_URL)
+  accumulatedMissingEnvVariables.push('BASE_URL');
+
+if (!process.env.DOMAIN)
+  accumulatedMissingEnvVariables.push('DOMAIN');
+
+if (!process.env.FRONTEND_URL)
+  accumulatedMissingEnvVariables.push('FRONTEND_URL');
 
 if (!process.env.JWT_SECRET)
   accumulatedMissingEnvVariables.push('JWT_SECRET');
@@ -46,4 +57,12 @@ const dbDialect = process.env.DB_DIALECT! as Dialect;
 const defaultAdminEmail = process.env.DEFAULT_ADMIN_EMAIL!;
 const resendAPIKey = process.env.RESEND_API_KEY!;
 const resendEmail = process.env.RESEND_EMAIL!;
-export { jwtSecret, dbName, dbPort, dbHost, dbUsername, dbPassword, dbDialect, defaultAdminEmail, resendAPIKey, resendEmail };
+const baseUrl = process.env.BASE_URL!;
+const domain = process.env.DOMAIN!;
+const frontendUrl = process.env.FRONTEND_URL!;
+const nodeEnv: "production" | "development" = process.env.NODE_ENV! as "production" | "development"
+
+if (nodeEnv !== "development" && nodeEnv !== "production")
+  throw new Error('Invalid NODE_ENV value set. Valid: "development" | "production"');
+
+export { jwtSecret, dbName, dbPort, dbHost, dbUsername, dbPassword, dbDialect, defaultAdminEmail, resendAPIKey, resendEmail, baseUrl, domain, frontendUrl, nodeEnv };
