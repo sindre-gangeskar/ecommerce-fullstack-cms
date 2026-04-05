@@ -8,11 +8,7 @@
     "seed": "bun seed.ts"
   },
   "dependencies": {
-    "@types/cookie-parser": "^1.4.10",
-    "@types/debug": "^4.1.12",
-    "@types/express": "^5.0.6",
-    "@types/morgan": "^1.9.10",
-    "@types/node": "^25.3.0",
+    "bcrypt": "^6.0.0",
     "cookie-parser": "~1.4.7",
     "debug": "~4.4.3",
     "dotenv": "^17.3.1",
@@ -28,6 +24,12 @@
   },
   "type": "module",
   "devDependencies": {
-    "@types/jsonwebtoken": "^9.0.10"
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/bcrypt": "^6.0.0",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/debug": "^4.1.13",
+    "@types/express": "^5.0.6",
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^25.5.2"
   }
 }
