@@ -46,9 +46,9 @@ export default class LoginTokenService {
       createAndThrowHttpError({ message: "An error occurred while to trying verify token and retrieve user data", status: 500, state: "error", name: "TokenVerifyUserError" })
     }
   }
-  static async deleteByUserId(userId: number): Promise<number | void> {
+  static async deleteByUserId(userId: number): Promise<void> {
     try {
-      return await UserLoginToken.destroy({ where: { userId: userId } });
+      await UserLoginToken.destroy({ where: { userId: userId } });
     } catch (error) {
       createAndThrowHttpError({ message: "An error occurred while trying to delete user token", status: 500, state: "error", name: "DeleteUserError" })
     }

@@ -5,7 +5,7 @@ export interface CategoryAttributes {
   name: string;
   parentId?: number;
 }
-
+export interface UpdateCategoryAttributes extends Partial<Omit<CategoryAttributes, "id">> { }
 export interface CreationCategoryAttributes extends Optional<CategoryAttributes, "id"> { };
 export class Category extends Model<CategoryAttributes, CreationCategoryAttributes> {
   declare public id: number;
@@ -17,6 +17,6 @@ export function initCategory(sequelize: Sequelize) {
   Category.init({
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     name: { type: DataTypes.STRING, unique: true },
-    parentId: { type: DataTypes.INTEGER, allowNull: true, references: {model: 'categories', key: 'id'} },
+    parentId: { type: DataTypes.INTEGER, allowNull: true, references: { model: 'categories', key: 'id' } },
   }, { sequelize, timestamps: false, tableName: 'categories' })
 }

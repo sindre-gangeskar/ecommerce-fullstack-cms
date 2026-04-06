@@ -1,5 +1,5 @@
 import { parseSequelizeError } from "@/lib/dbValidation";
-import { Category } from "@/models/categories";
+import { Category, UpdateCategoryAttributes } from "@/models/categories";
 
 export default class CategoryService {
   static async create(name: string): Promise<Category | null | undefined> {
@@ -28,6 +28,13 @@ export default class CategoryService {
       await Category.destroy({ where: { id } });
     } catch (error) {
       parseSequelizeError(error, 'delete');
+    }
+  }
+  static async updateById(id: number, data: UpdateCategoryAttributes): Promise<void> {
+    try {
+      await Category.update(data, { where: { id } });
+    } catch (error) {
+      parseSequelizeError(error, "update");
     }
   }
 }

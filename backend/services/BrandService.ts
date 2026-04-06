@@ -1,4 +1,3 @@
-import { createAndThrowHttpError } from "@/helpers/utils";
 import { parseSequelizeError } from "@/lib/dbValidation";
 import { Brand, BrandAttributes } from "models/brands";
 export default class BrandService {
@@ -24,14 +23,14 @@ export default class BrandService {
       parseSequelizeError(error, 'create');
     }
   };
-  static async delete(id: number): Promise<void> {
+  static async deleteById(id: number): Promise<void> {
     try {
       await Brand.destroy({ where: { id: id } });
     } catch (error) {
       parseSequelizeError(error, 'delete');
     }
   };
-  static async update(id: number, data: BrandAttributes): Promise<void> {
+  static async updateById(id: number, data: BrandAttributes): Promise<void> {
     try {
       await Brand.update({ ...data }, { where: { id: id } })
     } catch (error) {

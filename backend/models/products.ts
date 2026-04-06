@@ -8,6 +8,7 @@ export interface ProductAttributes {
   description?: string;
 }
 
+export interface ProductUpdateAttributes extends Partial<Omit<ProductAttributes, "id">> { }
 export interface ProductCreationAttributes extends Optional<ProductAttributes, "id"> { };
 export class Product extends Model<ProductAttributes, ProductCreationAttributes> {
   declare public id: number;

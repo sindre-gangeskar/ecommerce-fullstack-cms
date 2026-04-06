@@ -6,7 +6,7 @@ export interface ProductImageAttributes {
   productId: number;
   imageTypeId: number;
 }
-
+export interface ProductImageUpdateAttributes extends Partial<Omit<ProductImageAttributes, "id">> { }
 export interface ProductImageCreationAttributes extends Optional<ProductImageAttributes, "id"> { }
 export class ProductImage extends Model<ProductImageAttributes, ProductImageCreationAttributes> {
   declare public id: number;
@@ -19,7 +19,7 @@ export function initProductImages(sequelize: Sequelize) {
   ProductImage.init({
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     img_url: { type: DataTypes.TEXT, allowNull: false },
-    productId: { type: DataTypes.INTEGER, references: { model: 'products', key: 'id' } },
-    imageTypeId: { type: DataTypes.INTEGER, references: { model: 'image_types', key: 'id' } }
+    productId: { type: DataTypes.INTEGER, references: { model: 'products', key: 'id' }, allowNull: false },
+    imageTypeId: { type: DataTypes.INTEGER, references: { model: 'image_types', key: 'id' }, allowNull: false }
   }, { sequelize, timestamps: true, modelName: 'product_images' })
 }

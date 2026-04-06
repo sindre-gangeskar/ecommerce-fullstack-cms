@@ -1,4 +1,3 @@
-import { createAndThrowHttpError } from "@/helpers/utils";
 import { parseSequelizeError } from "@/lib/dbValidation";
 import { Role } from "models/roles";
 import { User } from "models/users";
@@ -23,6 +22,13 @@ export default class UserService {
       return await User.create({ email })
     } catch (error) {
       parseSequelizeError(error, 'create');
+    }
+  }
+  static async deleteById(id: number): Promise<void> {
+    try {
+      await User.destroy({ where: { id } });
+    } catch (error) {
+      parseSequelizeError(error, 'delete')
     }
   }
 }
