@@ -21,8 +21,8 @@ export function initProduct(sequelize: Sequelize) {
   Product.init({
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     name: { type: DataTypes.STRING, unique: true },
-    categoryId: { type: DataTypes.INTEGER, references: { model: 'categories', key: 'id' } },
-    brandId: { type: DataTypes.INTEGER, references: { model: 'brands', key: 'id' } },
+    categoryId: { type: DataTypes.INTEGER, references: { model: 'categories', key: 'id' }, allowNull: false },
+    brandId: { type: DataTypes.INTEGER, references: { model: 'brands', key: 'id' }, allowNull: false },
     description: { type: DataTypes.TEXT, allowNull: true },
   }, { sequelize, timestamps: true, tableName: 'products' })
 }

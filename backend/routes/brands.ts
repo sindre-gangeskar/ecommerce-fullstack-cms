@@ -9,7 +9,7 @@ router.get('/', isAuth, async function (_: Request, res: Response) {
   return res.status(200).json({
     state: "success",
     status: 200,
-    message: brands.length > 0 ? 'Brands successfully retrieved' : 'No brand records in database',
+    message: brands && brands.length > 0 ? 'Brands successfully retrieved' : 'No brand records in database',
     ...(brands ? { data: brands } : null)
   } satisfies APIResponse)
 })

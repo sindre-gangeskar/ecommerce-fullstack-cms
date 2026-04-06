@@ -15,6 +15,7 @@ const __dirname = path.dirname(__filename);
 import indexRouter from "@/routes/index";
 import brandsRouter from '@/routes/brands';
 import authRouter from '@/routes/auth';
+import productsRouter from '@/routes/products';
 var app = express();
 
 sequelize.sync({ force: false });
@@ -27,11 +28,7 @@ app.use(cookieParser());
 app.use('/', indexRouter);
 app.use('/brands', brandsRouter);
 app.use('/auth', authRouter);
-
-// catch 404 and forward to error handler
-app.use(function (_req: Request, _res: Response, next: NextFunction) {
-  next(createError(404));
-});
+app.use('/products', productsRouter);
 
 app.use(errorHandler);
 export default app;

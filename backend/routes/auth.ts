@@ -1,7 +1,7 @@
 import { baseUrl, domain, frontendUrl, nodeEnv } from '@/helpers/envVariables';
 import { signToken } from '@/helpers/jwt';
 import { validateEmail } from '@/lib/validation';
-import LoginTokenService from '@/services/LoginTokenService';
+import UserLoginTokenService from '@/services/UserLoginTokenService';
 import { APIResponse, UserJWTPayload } from '@/types/definitions';
 import express, { Request, Response } from 'express';
 import asyncHandler from 'middleware/asyncHandler';
@@ -18,7 +18,7 @@ router.post('/login', asyncHandler(async function (req: Request, res: Response) 
   
   const user = await UserService.getByEmail(email);
   if (user) {
-    const { token, path } = await LoginTokenService.createLoginToken(user.id);
+    const { token, path } = await UserLoginTokenService.createLoginToken(user.id);
     const url = `${baseUrl}/auth/verify?path=${path}&token=${token}`;
     await EmailService.sendEmail(email, url);
   }
@@ -35,7 +35,8 @@ router.get('/verify', asyncHandler(async function (req: Request, res: Response) 
   if (!path || !token)
     return res.status(404).json({ state: "fail", status: 404, message: 'Resource not found' } satisfies APIResponse);
 
-  const verifiedUser = await LoginTokenService.verifyLoginTokenAndGetUser(path, token);
+  const verifiedUser = await UserLoginTokenService.verifyLoginTokenAndGetUser(path, token);
+  
   if (!verifiedUser)
     return res.status(404).json({ state: "fail", status: 404, message: 'Invalid login link' } satisfies APIResponse);
 

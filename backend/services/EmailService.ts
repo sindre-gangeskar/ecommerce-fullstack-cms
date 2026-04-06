@@ -1,3 +1,4 @@
+import { createAndThrowHttpError } from "@/helpers/utils";
 import { resendAPIKey, resendEmail } from "helpers/envVariables";
 import { Resend } from "resend";
 
@@ -15,6 +16,7 @@ export default class EmailService {
       <p>${url}</p>
       `
     });
-    return { data, error };
+    if (error) createAndThrowHttpError({ message: "Failed to send email", state: "error", status: 500, name: "SendEmailError" })
+    return data;
   }
 }

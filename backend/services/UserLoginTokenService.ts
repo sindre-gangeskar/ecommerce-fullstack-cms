@@ -5,6 +5,7 @@ import { UserLoginToken } from '@/models/user_login_tokens';
 import { Op } from 'sequelize';
 import { User } from '@/models/users';
 import UserService from './UserService';
+import { createAndThrowHttpError } from '@/helpers/utils';
 export default class LoginTokenService {
   static async createLoginToken(userId: number) {
     try {
@@ -20,35 +21,36 @@ export default class LoginTokenService {
       throw error;
     }
   }
-  static async getTokenByUserId(userId: number) {
+  static async getTokenByUserId(userId: number): Promise<UserLoginToken | null | undefined> {
     try {
       return await UserLoginToken.findOne({ where: { userId } });
     } catch (error) {
-      console.error(error);
-      throw error;
+      createAndThrowHttpError({ message: "An error occurred while trying to retrieve login token", status: 500, state: "error", name: "TokenRetrieveError" })
     }
   }
-  static async verifyLoginTokenAndGetUser(path: string, token: string): Promise<User | null> {
+  static async verifyLoginTokenAndGetUser(path: string, token: string): Promise<User | null | undefined> {
     try {
-      const loginToken = await UserLoginToken.findOne({ where: { [ Op.and ]: { path: path } } });
+      const loginToken = await UserLoginToken.findOne({ where: { path } });
       if (!loginToken || (loginToken && new Date().getTime() > loginToken.expiresAt.getTime())) return null;
 
       const tokenValid = bcrypt.compareSync(token, loginToken.token);
-      console.log(tokenValid);
 
       if (!tokenValid) return null;
-      return await UserService.getByUserId(loginToken.userId);
+
+      const user = await UserService.getByUserId(loginToken.userId);
+      if (!user) return null;
+
+      await this.deleteByUserId(user.id);
+      return user;
     } catch (error) {
-      console.error(error);
-      throw error;
+      createAndThrowHttpError({ message: "An error occurred while to trying verify token and retrieve user data", status: 500, state: "error", name: "TokenVerifyUserError" })
     }
   }
-  static async deleteByUserId(userId: number) {
+  static async deleteByUserId(userId: number): Promise<number | void> {
     try {
       return await UserLoginToken.destroy({ where: { userId: userId } });
     } catch (error) {
-      console.error(error);
-      throw error;
+      createAndThrowHttpError({ message: "An error occurred while trying to delete user token", status: 500, state: "error", name: "DeleteUserError" })
     }
   }
 }
