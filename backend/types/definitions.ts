@@ -1,5 +1,7 @@
 type StatusCode = 200 | 201 | 400 | 401 | 404 | 409 | 429 | 500
 type State = "success" | "fail" | "error"
+export interface CustomHttpError extends Error, APIResponse { }
+
 export interface APIResponse {
   state: State;
   status: StatusCode;
@@ -7,7 +9,7 @@ export interface APIResponse {
   data?: unknown;
 }
 
-export interface UserJWTPayload{
+export interface UserJWTPayload {
   id: number;
   role: string;
   email: string;

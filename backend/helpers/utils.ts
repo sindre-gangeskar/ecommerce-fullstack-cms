@@ -1,11 +1,11 @@
-interface ResponseError extends Error {
-  status: number;
-}
+import { CustomHttpError } from "@/types/definitions";
 
-export function createAndThrowError(message: string = "An unexpected error has occurred", status: number = 500, name: string = "InternalServerError") {
-  const error = new Error(message) as ResponseError;
+export function createAndThrowHttpError({ message = "An unexpected error has occurred", state = "error", status = 500, name = "InternalServerError", data }: CustomHttpError) {
+  const error = new Error(message) as CustomHttpError;
   error.name = name;
+  error.state = state
   error.status = status;
-
+  error.data = data;
+  console.log(data);
   throw error;
 }

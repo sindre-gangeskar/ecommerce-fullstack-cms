@@ -1,5 +1,6 @@
 import { baseUrl, domain, frontendUrl, nodeEnv } from '@/helpers/envVariables';
 import { signToken } from '@/helpers/jwt';
+import { validateEmail } from '@/lib/validation';
 import LoginTokenService from '@/services/LoginTokenService';
 import { APIResponse, UserJWTPayload } from '@/types/definitions';
 import express, { Request, Response } from 'express';
@@ -12,7 +13,9 @@ const router = express.Router();
 router.post('/login', asyncHandler(async function (req: Request, res: Response) {
   const { email } = req.body;
   if (!email) return res.status(400).json({ state: "fail", status: 400, message: "email is required" } satisfies APIResponse);
-
+  
+  validateEmail(email);
+  
   const user = await UserService.getByEmail(email);
   if (user) {
     const { token, path } = await LoginTokenService.createLoginToken(user.id);
